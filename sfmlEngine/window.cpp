@@ -4,7 +4,6 @@
 #include "window.h"
 #include <iostream>
 
-
 MyWindow::MyWindow(unsigned width, unsigned height,
         const std::string& title, sf::Color color)
         : _window(sf::VideoMode({width, height}), title)
@@ -55,12 +54,21 @@ MyApplication::MyApplication()
     _init();
 }
 
+// наполнение примитивами
 void MyApplication::_init()
 {
-    CircleShape circle(50.0f); // Радиус 50
-    circle.setFillColor(Color::Blue);
-    circle.setPosition(Vector2f{100, 100});
-    _currShape.setShape(std::make_unique<CircleShape>(circle));
+    auto shp1 = std::make_unique<BaseShape<CircleShape, RenderWindow>>(
+        std::make_unique<CircleShape>(ShapeFactory::createCircle(80, Color::Blue, Vector2f{300, 250}))
+    );
+    auto shp2 = std::make_unique<BaseShape<RectangleShape, RenderWindow>>(
+        std::make_unique<RectangleShape>(ShapeFactory::createRectangle(Vector2f{90, 90}, Color::Green, Vector2f{100, 250}))
+        );
+    auto shp3 = std::make_unique<BaseShape<ConvexShape, RenderWindow>>(
+        std::make_unique<ConvexShape>(ShapeFactory::createTriangle(95, Color::Red, Vector2f{500, 250}))
+    );
+    _worker.emplace_back(std::move(shp1));
+    _worker.emplace_back(std::move(shp2));
+    _worker.emplace_back(std::move(shp3));
 }
 
 void MyApplication::run()
@@ -88,6 +96,7 @@ void MyApplication::_handleEvent(const Event& event)
 
 void MyApplication::_render() {
     _myWindow.clear();
-    _myWindow.draw(_currShape);
+    // передаю менеджеру задание нарисовать пул shapes
+    _worker.drawAll(_myWindow.getWindow());
     _myWindow.display();
 }

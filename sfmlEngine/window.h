@@ -48,7 +48,10 @@ public:
 
 class MyApplication
 {
-    BaseShape<CircleShape> _currShape;
+    BaseShape<CircleShape, RenderWindow> _currShape;
+
+    ShapeManager<RenderWindow>           _worker;
+
 public:
 
     MyWindow _myWindow;
@@ -62,6 +65,34 @@ private:
 
     void _handleEvent(const Event& event);
     void _render();
+};
+
+class ShapeFactory {
+public:
+    static auto createCircle(float radius, sf::Color color, sf::Vector2f pos) {
+        auto circle = CircleShape(radius);
+        circle.setFillColor(color);
+        circle.setPosition(pos);
+        return circle;
+    }
+
+    static auto createRectangle(sf::Vector2f size, sf::Color color, sf::Vector2f pos) {
+        auto rect = RectangleShape(size);
+        rect.setFillColor(color);
+        rect.setPosition(pos);
+        return rect;
+    }
+
+    static auto createTriangle(float side, sf::Color color, sf::Vector2f pos) {
+        auto triangle = ConvexShape();
+        triangle.setPointCount(3);
+        triangle.setPoint(0, sf::Vector2f(0, 0));
+        triangle.setPoint(1, sf::Vector2f(side, 0));
+        triangle.setPoint(2, sf::Vector2f(side/2, side));
+        triangle.setFillColor(color);
+        triangle.setPosition(pos);
+        return triangle;
+    }
 };
 
 #endif //SHAPEVIEWER_WINDOW_H
