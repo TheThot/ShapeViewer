@@ -4,6 +4,7 @@
 #ifndef SHAPEVIEWER_WINDOW_H
 #define SHAPEVIEWER_WINDOW_H
 
+#include "BaseShape.h"
 #include <SFML/Graphics.hpp>
 
 using namespace sf;
@@ -45,10 +46,9 @@ public:
 
 };
 
-
 class MyApplication
 {
-
+    BaseShape<CircleShape> _currShape;
 public:
 
     MyWindow _myWindow;

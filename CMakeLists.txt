@@ -16,11 +16,14 @@ set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_DOC OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
 set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
-set(PROG_INCLUDE    ${CMAKE_CURRENT_SOURCE_DIR}/sfmlEngine)
 
 FetchContent_MakeAvailable(sfml)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/sfmlEngine
+                    ${CMAKE_CURRENT_SOURCE_DIR}/shapeEngine)
+
 add_subdirectory(sfmlEngine)
+add_subdirectory(shapeEngine)
 
 add_executable(ShapeViewer main.cpp)
 
@@ -30,7 +33,8 @@ target_link_libraries(ShapeViewer
         sfml-window
         sfml-system
         PRIVATE
-        sfmlEngine)
+        sfmlEngine
+        shapeEngine)
 
 # копируем нужные нам DLL-ки
 if(WIN32)
@@ -41,5 +45,3 @@ if(WIN32)
             $<TARGET_FILE:sfml-system>
             $<TARGET_FILE_DIR:ShapeViewer>)
 endif()
-
-include_directories(${PROG_INCLUDE})

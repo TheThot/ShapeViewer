@@ -46,7 +46,7 @@ bool MyWindow::isOpen() const
 template<typename T>
 void MyWindow::draw(const T& shape)
 {
-
+    _window.draw(*shape.getShape());
 }
 
 MyApplication::MyApplication()
@@ -57,7 +57,10 @@ MyApplication::MyApplication()
 
 void MyApplication::_init()
 {
-
+    CircleShape circle(50.0f); // Радиус 50
+    circle.setFillColor(Color::Blue);
+    circle.setPosition(Vector2f{100, 100});
+    _currShape.setShape(std::make_unique<CircleShape>(circle));
 }
 
 void MyApplication::run()
@@ -85,6 +88,6 @@ void MyApplication::_handleEvent(const Event& event)
 
 void MyApplication::_render() {
     _myWindow.clear();
-    //shapeManager.drawAll(window);
+    _myWindow.draw(_currShape);
     _myWindow.display();
 }
